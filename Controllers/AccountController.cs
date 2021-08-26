@@ -37,7 +37,7 @@ namespace DentalShop.Controllers
         }
 
         [HttpPost("login")]
-        public async Task<ActionResult<AuthResponseDTO>> Login(AccountCredentialsDTO credentials)
+        public async Task<ActionResult<AuthResponseDTO>> Login(AccountLoginDTO credentials)
         {
             var user = await userManager.FindByNameAsync(credentials.Email);
 
@@ -63,7 +63,9 @@ namespace DentalShop.Controllers
             var user = new AppUser
             {
                 Email = credentials.Email,
-                UserName = credentials.Email
+                Name = credentials.Name,
+                UserName = credentials.Email,
+                PhoneNumber = credentials.Phone
             };
 
             var result = await userManager.CreateAsync(user, credentials.Password);

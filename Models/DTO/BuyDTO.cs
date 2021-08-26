@@ -8,7 +8,6 @@ namespace DentalShop.Models.DTO
 {
     public class BuyDTO
     {
-        public string Name { get; set; }
         public List<BuyProductsViewModel> Orders { get; set; }
     }
 }

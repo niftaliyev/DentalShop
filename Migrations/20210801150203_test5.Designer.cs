@@ -3,14 +3,16 @@ using System;
 using DentalShop.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace DentalShop.Migrations
 {
     [DbContext(typeof(DentalShopDbContext))]
-    partial class DentalShopDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210801150203_test5")]
+    partial class test5
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

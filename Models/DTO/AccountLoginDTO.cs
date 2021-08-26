@@ -6,16 +6,11 @@ using System.Threading.Tasks;
 
 namespace DentalShop.Models.DTO
 {
-    public class AccountCredentialsDTO
+    public class AccountLoginDTO
     {
-        [Required(ErrorMessage = "name not be empty")]
-        public string Name { get; set; }
         [Required(ErrorMessage = "tetete")]
         public string Email { get; set; }
         [Required(ErrorMessage = "fasgag")]
         public string Password { get; set; }
-
-        [Required(ErrorMessage = "phone not be empty")]
-        public string Phone { get; set; }
     }
 }

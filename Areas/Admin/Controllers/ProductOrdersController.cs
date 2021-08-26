@@ -6,28 +6,26 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using DentalShop.Models;
-using Microsoft.AspNetCore.Authorization;
 
 namespace DentalShop.Areas.Admin.Controllers
 {
     [Area("Admin")]
-    [Authorize]
-    public class OrderProductsUsersController : Controller
+    public class ProductOrdersController : Controller
     {
         private readonly DentalShopDbContext _context;
 
-        public OrderProductsUsersController(DentalShopDbContext context)
+        public ProductOrdersController(DentalShopDbContext context)
         {
             _context = context;
         }
 
-        // GET: Admin/OrderProductsUsers
+        // GET: Admin/ProductOrders
         public async Task<IActionResult> Index()
         {
-            return View(await _context.OrderProductUsers.ToListAsync());
+            return View(await _context.PorductOrders.ToListAsync());
         }
 
-        // GET: Admin/OrderProductsUsers/Details/5
+        // GET: Admin/ProductOrders/Details/5
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -35,39 +33,39 @@ namespace DentalShop.Areas.Admin.Controllers
                 return NotFound();
             }
 
-            var orderProductsUsers = await _context.OrderProductUsers
+            var productOrder = await _context.PorductOrders
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (orderProductsUsers == null)
+            if (productOrder == null)
             {
                 return NotFound();
             }
 
-            return View(orderProductsUsers);
+            return View(productOrder);
         }
 
-        // GET: Admin/OrderProductsUsers/Create
+        // GET: Admin/ProductOrders/Create
         public IActionResult Create()
         {
             return View();
         }
 
-        // POST: Admin/OrderProductsUsers/Create
+        // POST: Admin/ProductOrders/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to, for 
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,UserId,ProductId,Count")] OrderProductsUsers orderProductsUsers)
+        public async Task<IActionResult> Create([Bind("Id,UserId,ProductId,Count")] ProductOrder productOrder)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(orderProductsUsers);
+                _context.Add(productOrder);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            return View(orderProductsUsers);
+            return View(productOrder);
         }
 
-        // GET: Admin/OrderProductsUsers/Edit/5
+        // GET: Admin/ProductOrders/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -75,22 +73,22 @@ namespace DentalShop.Areas.Admin.Controllers
                 return NotFound();
             }
 
-            var orderProductsUsers = await _context.OrderProductUsers.FindAsync(id);
-            if (orderProductsUsers == null)
+            var productOrder = await _context.PorductOrders.FindAsync(id);
+            if (productOrder == null)
             {
                 return NotFound();
             }
-            return View(orderProductsUsers);
+            return View(productOrder);
         }
 
-        // POST: Admin/OrderProductsUsers/Edit/5
+        // POST: Admin/ProductOrders/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to, for 
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,UserId,ProductId,Count")] OrderProductsUsers orderProductsUsers)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,UserId,ProductId,Count")] ProductOrder productOrder)
         {
-            if (id != orderProductsUsers.Id)
+            if (id != productOrder.Id)
             {
                 return NotFound();
             }
@@ -99,12 +97,12 @@ namespace DentalShop.Areas.Admin.Controllers
             {
                 try
                 {
-                    _context.Update(orderProductsUsers);
+                    _context.Update(productOrder);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!OrderProductsUsersExists(orderProductsUsers.Id))
+                    if (!ProductOrderExists(productOrder.Id))
                     {
                         return NotFound();
                     }
@@ -115,10 +113,10 @@ namespace DentalShop.Areas.Admin.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(orderProductsUsers);
+            return View(productOrder);
         }
 
-        // GET: Admin/OrderProductsUsers/Delete/5
+        // GET: Admin/ProductOrders/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -126,30 +124,30 @@ namespace DentalShop.Areas.Admin.Controllers
                 return NotFound();
             }
 
-            var orderProductsUsers = await _context.OrderProductUsers
+            var productOrder = await _context.PorductOrders
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (orderProductsUsers == null)
+            if (productOrder == null)
             {
                 return NotFound();
             }
 
-            return View(orderProductsUsers);
+            return View(productOrder);
         }
 
-        // POST: Admin/OrderProductsUsers/Delete/5
+        // POST: Admin/ProductOrders/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var orderProductsUsers = await _context.OrderProductUsers.FindAsync(id);
-            _context.OrderProductUsers.Remove(orderProductsUsers);
+            var productOrder = await _context.PorductOrders.FindAsync(id);
+            _context.PorductOrders.Remove(productOrder);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool OrderProductsUsersExists(int id)
+        private bool ProductOrderExists(int id)
         {
-            return _context.OrderProductUsers.Any(e => e.Id == id);
+            return _context.PorductOrders.Any(e => e.Id == id);
         }
     }
 }

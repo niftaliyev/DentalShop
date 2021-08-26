@@ -3,14 +3,16 @@ using System;
 using DentalShop.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace DentalShop.Migrations
 {
     [DbContext(typeof(DentalShopDbContext))]
-    partial class DentalShopDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210801150036_test4")]
+    partial class test4
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -174,27 +176,6 @@ namespace DentalShop.Migrations
                     b.HasIndex("ProductId");
 
                     b.ToTable("PorductOrders");
-                });
-
-            modelBuilder.Entity("DentalShop.Models.ProductOrdersUserOrders", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    b.Property<int>("ProductOrderId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("UserOrderId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ProductOrderId");
-
-                    b.HasIndex("UserOrderId");
-
-                    b.ToTable("ProductOrdersUserOrders");
                 });
 
             modelBuilder.Entity("DentalShop.Models.UserOrder", b =>
@@ -382,25 +363,6 @@ namespace DentalShop.Migrations
                     b.Navigation("Product");
                 });
 
-            modelBuilder.Entity("DentalShop.Models.ProductOrdersUserOrders", b =>
-                {
-                    b.HasOne("DentalShop.Models.ProductOrder", "ProductOrder")
-                        .WithMany("ProductOrdersUserOrders")
-                        .HasForeignKey("ProductOrderId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("DentalShop.Models.UserOrder", "UserOrder")
-                        .WithMany("ProductOrdersUserOrders")
-                        .HasForeignKey("UserOrderId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("ProductOrder");
-
-                    b.Navigation("UserOrder");
-                });
-
             modelBuilder.Entity("DentalShop.Models.UserOrder", b =>
                 {
                     b.HasOne("DentalShop.Models.Identity.AppUser", "AppUser")
@@ -486,14 +448,7 @@ namespace DentalShop.Migrations
 
             modelBuilder.Entity("DentalShop.Models.ProductOrder", b =>
                 {
-                    b.Navigation("ProductOrdersUserOrders");
-
                     b.Navigation("UserOrders");
-                });
-
-            modelBuilder.Entity("DentalShop.Models.UserOrder", b =>
-                {
-                    b.Navigation("ProductOrdersUserOrders");
                 });
 #pragma warning restore 612, 618
         }
