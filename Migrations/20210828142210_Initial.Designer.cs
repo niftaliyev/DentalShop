@@ -9,8 +9,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DentalShop.Migrations
 {
     [DbContext(typeof(DentalShopDbContext))]
-    [Migration("20210801102930_test")]
-    partial class test
+    [Migration("20210828142210_Initial")]
+    partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -165,6 +165,9 @@ namespace DentalShop.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
+                    b.Property<string>("AppUserId")
+                        .HasColumnType("varchar(255)");
+
                     b.Property<int>("Count")
                         .HasColumnType("int");
 
@@ -173,33 +176,11 @@ namespace DentalShop.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ProductId");
-
-                    b.ToTable("PorductOrders");
-                });
-
-            modelBuilder.Entity("DentalShop.Models.UserOrder", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    b.Property<string>("AppUserId")
-                        .HasColumnType("varchar(255)");
-
-                    b.Property<int?>("ProductOrderId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("ProductsOrderId")
-                        .HasColumnType("longtext");
-
-                    b.HasKey("Id");
-
                     b.HasIndex("AppUserId");
 
-                    b.HasIndex("ProductOrderId");
+                    b.HasIndex("ProductId");
 
-                    b.ToTable("UserOrders");
+                    b.ToTable("ProductOrders");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -354,28 +335,19 @@ namespace DentalShop.Migrations
 
             modelBuilder.Entity("DentalShop.Models.ProductOrder", b =>
                 {
+                    b.HasOne("DentalShop.Models.Identity.AppUser", "AppUser")
+                        .WithMany()
+                        .HasForeignKey("AppUserId");
+
                     b.HasOne("DentalShop.Areas.Admin.Model.Product", "Product")
                         .WithMany("ProductOrders")
                         .HasForeignKey("ProductId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Product");
-                });
-
-            modelBuilder.Entity("DentalShop.Models.UserOrder", b =>
-                {
-                    b.HasOne("DentalShop.Models.Identity.AppUser", "AppUser")
-                        .WithMany("UserOrders")
-                        .HasForeignKey("AppUserId");
-
-                    b.HasOne("DentalShop.Models.ProductOrder", "ProductOrder")
-                        .WithMany("UserOrders")
-                        .HasForeignKey("ProductOrderId");
-
                     b.Navigation("AppUser");
 
-                    b.Navigation("ProductOrder");
+                    b.Navigation("Product");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -439,16 +411,6 @@ namespace DentalShop.Migrations
                     b.Navigation("Images");
 
                     b.Navigation("ProductOrders");
-                });
-
-            modelBuilder.Entity("DentalShop.Models.Identity.AppUser", b =>
-                {
-                    b.Navigation("UserOrders");
-                });
-
-            modelBuilder.Entity("DentalShop.Models.ProductOrder", b =>
-                {
-                    b.Navigation("UserOrders");
                 });
 #pragma warning restore 612, 618
         }

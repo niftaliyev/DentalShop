@@ -1,4 +1,5 @@
-﻿using DentalShop.Models;
+﻿using DentalShop.Areas.Admin.Model;
+using DentalShop.Models;
 using DentalShop.Models.DTO;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -29,150 +30,43 @@ namespace DentalShop.Controllers
         {
             var username = User.Identity.Name.ToString();
             var user = _context.Users.FirstOrDefault(x => x.UserName == username);
-            double price = 0;
 
-            List<ProductOrder> orderProducts = new List<ProductOrder>();
+            var userOrders = _context.ProductOrders.Where(x => x.AppUserId == user.Id);
 
-            var checkUserOrder = _context.UserOrders.FirstOrDefault(x => x.AppUserId == user.Id);
-            if (checkUserOrder == null)
+            
+
+            foreach (var itemOrder in order.Orders)
             {
-                foreach (var item in order.Orders)
-                {
-                    var product = _context.Products.FirstOrDefault(x => x.Id == item.ProductId);
-
-                    if (product != null)
+                var test = userOrders.Any(x => x.ProductId == itemOrder.ProductId);
+               
+                    
+                    if (test)
                     {
-                        var existingOrder = orderProducts.FirstOrDefault(x => x.ProductId == product.Id);
-                        price += product.Price;
-
-                        if (existingOrder == null)
-                        {
-                            orderProducts.Add(new ProductOrder { ProductId = item.ProductId, Count = item.Count });
-
-                        }
-                        else
-                        {
-                            existingOrder.Count += item.Count;
-                        }
+                        var itemUserOrder = _context.ProductOrders.Where(x => x.AppUserId == user.Id && x.ProductId == itemOrder.ProductId).FirstOrDefault();
+                        itemUserOrder.Count += itemOrder.Count;
+                        _context.ProductOrders.Update(itemUserOrder);
                     }
-                }
-
-                if (orderProducts.Count > 0 && price > 20)
-                {
-                  
-
-                    UserOrder userOrder = new UserOrder {AppUserId = user.Id };
-                    _context.UserOrders.Add(userOrder);
-                    await _context.SaveChangesAsync();
-
-                    _context.PorductOrders.AddRange(orderProducts);
-                    await _context.SaveChangesAsync();
-
-                    foreach (var item in orderProducts)
+                    else
                     {
-                     _context.ProductOrdersUserOrders.AddRange(new ProductOrdersUserOrders { UserOrderId = userOrder.Id, ProductOrderId = item.Id  });
-                     await _context.SaveChangesAsync();
-
+                        _context.ProductOrders.Add(new ProductOrder
+                        {
+                            ProductId = itemOrder.ProductId,
+                            Count = itemOrder.Count,
+                            AppUserId = user.Id
+                        });
                     }
-
-                    return Ok();
-                }
-                else
-                {
-                    return BadRequest();
-                }
-
+                
             }
-            ////////////////////////////
-
-            if (checkUserOrder != null)
-            {
-
-                var productordersuserorders = _context.ProductOrdersUserOrders.Where(x => x.UserOrderId == checkUserOrder.Id).ToList();
-                List<ProductOrder> productOrders = new List<ProductOrder>();
-
-                foreach (var item in productordersuserorders)
-                {
-                   
-                     var test = _context.PorductOrders.First(x => x.Id == item.ProductOrderId);
-                    productOrders.Add(test);
-                }
-
-                foreach (var item in order.Orders)
-                {
-                    foreach (var item2 in productOrders)
-                    {
-                        if (item2.ProductId == item.ProductId)
-                        {
-                           
-
-                            item2.Count += item.Count;
-                            _context.Update(item2);
-                            _context.SaveChanges();
-                        }
-                        else
-                        {
-                            ///////// this
-                            _context.PorductOrders.Add(new ProductOrder { ProductId = item2.ProductId, Count = item2.Count });
-                            _context.SaveChanges();
-                        }
-
-                    }
-                }
-
-                //foreach (var item in productOrders)
-                //{
-                //    orderProducts = _context.Products.Where(x => x.Id == item.ProductId ).ToList();
-
-                //}
-                //if (orderProducts != null)
-                //{
-                //    foreach (var item in order.Orders)
-                //    {
-                //        foreach (var item2 in orderProducts.ToList())
-                //        {
-                //            if (item2.ProductId == item.ProductId)
-                //            {
-                //                item2.Count += item.Count;
-                //                _context.Update(item2);
-                //                await _context.SaveChangesAsync();
-                //            }
-                //            else
-                //            {
-                //                orderProducts.Add(new ProductOrder { ProductId = item.ProductId, Count = item.Count });
-
-                //            }
-                //        }
-
-                //    }
-                //}
+            _context.SaveChanges();
 
 
-                //if (orderProducts.Count > 0)
-                //{
-                //    _context.PorductOrders.UpdateRange(orderProducts);
-                //    await _context.SaveChangesAsync();
-
-                //    foreach (var item in orderProducts)
-                //    {
-                //        _context.ProductOrdersUserOrders.AddRange(new ProductOrdersUserOrders { UserOrderId = checkUserOrder.Id, ProductOrderId = item.Id });
-                //        await _context.SaveChangesAsync();
-
-                //    }
-                //    return Ok();
-                //}
-            }
-
-
-            return BadRequest();
-
-
-
+           
+            return Ok();
 
         }
 
-        
-
 
     }
+
+
 }

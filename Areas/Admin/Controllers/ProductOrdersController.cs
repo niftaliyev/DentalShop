@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using DentalShop.Models;
+using DentalShop.Areas.ViewModels;
 
 namespace DentalShop.Areas.Admin.Controllers
 {
@@ -22,7 +23,8 @@ namespace DentalShop.Areas.Admin.Controllers
         // GET: Admin/ProductOrders
         public async Task<IActionResult> Index()
         {
-            return View(await _context.PorductOrders.ToListAsync());
+            var dentalShopDbContext = _context.ProductOrders.Include(p => p.AppUser).OrderBy(x => x.AppUser.Id).GroupBy(x => x.AppUser.Id);
+            return View(dentalShopDbContext.ToList());
         }
 
         // GET: Admin/ProductOrders/Details/5
@@ -33,7 +35,9 @@ namespace DentalShop.Areas.Admin.Controllers
                 return NotFound();
             }
 
-            var productOrder = await _context.PorductOrders
+            var productOrder = await _context.ProductOrders
+                .Include(p => p.AppUser)
+                .Include(p => p.Product)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (productOrder == null)
             {
@@ -46,6 +50,8 @@ namespace DentalShop.Areas.Admin.Controllers
         // GET: Admin/ProductOrders/Create
         public IActionResult Create()
         {
+            ViewData["AppUserId"] = new SelectList(_context.Users, "Id", "Id");
+            ViewData["ProductId"] = new SelectList(_context.Products, "Id", "Id");
             return View();
         }
 
@@ -54,7 +60,7 @@ namespace DentalShop.Areas.Admin.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,UserId,ProductId,Count")] ProductOrder productOrder)
+        public async Task<IActionResult> Create([Bind("Id,ProductId,Count,AppUserId")] ProductOrder productOrder)
         {
             if (ModelState.IsValid)
             {
@@ -62,6 +68,8 @@ namespace DentalShop.Areas.Admin.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
+            ViewData["AppUserId"] = new SelectList(_context.Users, "Id", "Id", productOrder.AppUserId);
+            ViewData["ProductId"] = new SelectList(_context.Products, "Id", "Id", productOrder.ProductId);
             return View(productOrder);
         }
 
@@ -73,11 +81,13 @@ namespace DentalShop.Areas.Admin.Controllers
                 return NotFound();
             }
 
-            var productOrder = await _context.PorductOrders.FindAsync(id);
+            var productOrder = await _context.ProductOrders.FindAsync(id);
             if (productOrder == null)
             {
                 return NotFound();
             }
+            ViewData["AppUserId"] = new SelectList(_context.Users, "Id", "Id", productOrder.AppUserId);
+            ViewData["ProductId"] = new SelectList(_context.Products, "Id", "Id", productOrder.ProductId);
             return View(productOrder);
         }
 
@@ -86,7 +96,7 @@ namespace DentalShop.Areas.Admin.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,UserId,ProductId,Count")] ProductOrder productOrder)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,ProductId,Count,AppUserId")] ProductOrder productOrder)
         {
             if (id != productOrder.Id)
             {
@@ -113,6 +123,8 @@ namespace DentalShop.Areas.Admin.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
+            ViewData["AppUserId"] = new SelectList(_context.Users, "Id", "Id", productOrder.AppUserId);
+            ViewData["ProductId"] = new SelectList(_context.Products, "Id", "Id", productOrder.ProductId);
             return View(productOrder);
         }
 
@@ -124,7 +136,9 @@ namespace DentalShop.Areas.Admin.Controllers
                 return NotFound();
             }
 
-            var productOrder = await _context.PorductOrders
+            var productOrder = await _context.ProductOrders
+                .Include(p => p.AppUser)
+                .Include(p => p.Product)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (productOrder == null)
             {
@@ -139,15 +153,15 @@ namespace DentalShop.Areas.Admin.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var productOrder = await _context.PorductOrders.FindAsync(id);
-            _context.PorductOrders.Remove(productOrder);
+            var productOrder = await _context.ProductOrders.FindAsync(id);
+            _context.ProductOrders.Remove(productOrder);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
         private bool ProductOrderExists(int id)
         {
-            return _context.PorductOrders.Any(e => e.Id == id);
+            return _context.ProductOrders.Any(e => e.Id == id);
         }
     }
 }

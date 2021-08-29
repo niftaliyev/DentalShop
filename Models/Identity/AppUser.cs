@@ -10,7 +10,6 @@ namespace DentalShop.Models.Identity
     public class AppUser : IdentityUser
     {
         public string Name { get; set; }
-        public IEnumerable<UserOrder> UserOrders { get; set; }
 
     }
 }

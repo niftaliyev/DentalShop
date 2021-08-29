@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace DentalShop.Migrations
 {
-    public partial class test : Migration
+    public partial class Initial : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -265,53 +265,31 @@ namespace DentalShop.Migrations
                 .Annotation("MySql:CharSet", "utf8mb4");
 
             migrationBuilder.CreateTable(
-                name: "PorductOrders",
+                name: "ProductOrders",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
                     ProductId = table.Column<int>(type: "int", nullable: false),
-                    Count = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_PorductOrders", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_PorductOrders_Products_ProductId",
-                        column: x => x.ProductId,
-                        principalTable: "Products",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                })
-                .Annotation("MySql:CharSet", "utf8mb4");
-
-            migrationBuilder.CreateTable(
-                name: "UserOrders",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    Count = table.Column<int>(type: "int", nullable: false),
                     AppUserId = table.Column<string>(type: "varchar(255)", nullable: true)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
-                    ProductsOrderId = table.Column<string>(type: "longtext", nullable: true)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
-                    ProductOrderId = table.Column<int>(type: "int", nullable: true)
+                        .Annotation("MySql:CharSet", "utf8mb4")
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_UserOrders", x => x.Id);
+                    table.PrimaryKey("PK_ProductOrders", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_UserOrders_AspNetUsers_AppUserId",
+                        name: "FK_ProductOrders_AspNetUsers_AppUserId",
                         column: x => x.AppUserId,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_UserOrders_PorductOrders_ProductOrderId",
-                        column: x => x.ProductOrderId,
-                        principalTable: "PorductOrders",
+                        name: "FK_ProductOrders_Products_ProductId",
+                        column: x => x.ProductId,
+                        principalTable: "Products",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 })
                 .Annotation("MySql:CharSet", "utf8mb4");
 
@@ -358,24 +336,19 @@ namespace DentalShop.Migrations
                 column: "ProductId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_PorductOrders_ProductId",
-                table: "PorductOrders",
+                name: "IX_ProductOrders_AppUserId",
+                table: "ProductOrders",
+                column: "AppUserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ProductOrders_ProductId",
+                table: "ProductOrders",
                 column: "ProductId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Products_CategoryId",
                 table: "Products",
                 column: "CategoryId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_UserOrders_AppUserId",
-                table: "UserOrders",
-                column: "AppUserId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_UserOrders_ProductOrderId",
-                table: "UserOrders",
-                column: "ProductOrderId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -399,16 +372,13 @@ namespace DentalShop.Migrations
                 name: "Images");
 
             migrationBuilder.DropTable(
-                name: "UserOrders");
+                name: "ProductOrders");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");
 
             migrationBuilder.DropTable(
                 name: "AspNetUsers");
-
-            migrationBuilder.DropTable(
-                name: "PorductOrders");
 
             migrationBuilder.DropTable(
                 name: "Products");

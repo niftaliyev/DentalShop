@@ -19,7 +19,7 @@ namespace DentalShop.Models
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             optionsBuilder.UseMySql(
-               "server=localhost;port=3306;user=root;password='';database=dentalshoptwo;",
+               "server=localhost;port=3306;user=root;password='';database=dentalshop;",
                new MySqlServerVersion(new Version(8, 0, 11))
            );
         }
@@ -27,10 +27,8 @@ namespace DentalShop.Models
   
 
         public DbSet<Product> Products { get; set; }
-        public DbSet<ProductOrder> PorductOrders { get; set; }
-        public DbSet<UserOrder> UserOrders { get; set; }
+        public DbSet<ProductOrder> ProductOrders { get; set; }
         public DbSet<Category> Categories { get; set; }
         public DbSet<Image> Images { get; set; }
-        public DbSet<ProductOrdersUserOrders> ProductOrdersUserOrders { get; set; }
     }
 }
