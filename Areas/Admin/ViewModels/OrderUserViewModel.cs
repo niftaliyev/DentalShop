@@ -8,6 +8,10 @@ namespace DentalShop.Areas.ViewModels
 {
     public class OrderUserViewModel
     {
-        public AppUser AppUser { get; set; }
+        public string Id { get; set; }
+        public string Name { get; set; }
+        public string Email { get; set; }
+
+        public AppUser AppUserModel { get; set; }
     }
 }

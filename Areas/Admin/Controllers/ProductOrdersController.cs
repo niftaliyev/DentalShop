@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using DentalShop.Models;
 using DentalShop.Areas.ViewModels;
+using DentalShop.Models.Identity;
 
 namespace DentalShop.Areas.Admin.Controllers
 {
@@ -23,22 +24,36 @@ namespace DentalShop.Areas.Admin.Controllers
         // GET: Admin/ProductOrders
         public async Task<IActionResult> Index()
         {
-            var dentalShopDbContext = _context.ProductOrders.Include(p => p.AppUser).OrderBy(x => x.AppUser.Id).GroupBy(x => x.AppUser.Id);
-            return View(dentalShopDbContext.ToList());
+            var dentalShopDbContext = _context.ProductOrders
+                .Include(p => p.AppUser)
+                .GroupBy(x => new {   x.AppUser.Id , x.AppUser.Name , x.AppUser.Email })
+                .Select(o => new OrderUserViewModel
+                {
+                     Id = o.Key.Id,
+                     Email = o.Key.Email,
+                     Name = o.Key.Name
+
+                })
+                .ToList();
+
+            
+
+            return View(dentalShopDbContext);
         }
 
         // GET: Admin/ProductOrders/Details/5
-        public async Task<IActionResult> Details(int? id)
+        public IActionResult Details(string? id)
         {
             if (id == null)
             {
                 return NotFound();
             }
 
-            var productOrder = await _context.ProductOrders
+            var productOrder = _context.ProductOrders
                 .Include(p => p.AppUser)
                 .Include(p => p.Product)
-                .FirstOrDefaultAsync(m => m.Id == id);
+                .Where(x => x.AppUserId == id)
+                .ToList();
             if (productOrder == null)
             {
                 return NotFound();
