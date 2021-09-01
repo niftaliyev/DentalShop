@@ -37,9 +37,11 @@ namespace DentalShop.Controllers
 
             foreach (var itemOrder in order.Orders)
             {
-                var test = userOrders.Any(x => x.ProductId == itemOrder.ProductId);
+                var product = _context.Products.Where(x => x.Id == itemOrder.ProductId).FirstOrDefault();
+                var test = userOrders.Any(x => x.ProductId == itemOrder.ProductId && x.Product.Color == product.Color);
                
-                    
+
+
                     if (test)
                     {
                         var itemUserOrder = _context.ProductOrders.Where(x => x.AppUserId == user.Id && x.ProductId == itemOrder.ProductId).FirstOrDefault();

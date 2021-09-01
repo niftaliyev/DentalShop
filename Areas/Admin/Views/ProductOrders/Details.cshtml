@@ -1,32 +1,42 @@
 ﻿@model IEnumerable<DentalShop.Models.ProductOrder>
 
-@{
-    ViewData["Title"] = "Details";
-}
+@{ ViewData["Title"] = "Details"; }
 
-<h1>Details</h1>
-
-<div>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                <span>Title</span>
+            </th>
+            <th>
+                <span>Image</span>
+            </th>
+            <th>
+                <span>Count</span>
+            </th>
+            <th></th>
+        </tr>
+    </thead>
     <tbody>
 
         @foreach (var item in Model)
         {
-            <tr>
 
-                <td>
-                    <h3>@item.Product.Title</h3>
-                </td>
-                <td>
-                    <h4>@item.Count</h4>
-                </td>
-                <td>
-                    <img src="@item.Product.CoverImage" width="100" alt="Alternate Text" />
-                </td>
-            </tr>
-        }
+<tr>
+
+    <td>
+        <p>@item.Product.Title</p>
+    </td>
+    <td>
+        <img src="@item.Product.CoverImage" width="100" alt="Alternate Text" />
+    </td>
+    <td>
+        <p>@item.Count</p>
+    </td>
+
+</tr>}
     </tbody>
-
-</div>
+</table>
 <div>
     @*<a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |*@
     <a asp-action="Index">Back to List</a>

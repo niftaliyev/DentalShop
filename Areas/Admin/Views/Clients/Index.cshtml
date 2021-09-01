@@ -1,9 +1,35 @@
 ﻿@model IEnumerable<DentalShop.Models.Identity.AppUser>
 
 
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                <span>Name</span>
+            </th>
+            <th>
+                <span>Phone Number</span>
+            </th>
+            <th>
+                <span>Email</span>
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+<tr>
 
-
-@foreach (var item in Model)
-{
-    <h3>@item.Name</h3>
-}
+    <td>
+        <p>@item.Name</p>
+    </td>
+    <td>
+        <p>@item.PhoneNumber</p>
+    </td>
+    <td>
+        <p>@item.Email</p>
+    </td>
+</tr>}
+    </tbody>
+</table>
