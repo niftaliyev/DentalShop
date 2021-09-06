@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using DentalShop.Models;
 using DentalShop.Areas.ViewModels;
 using DentalShop.Models.Identity;
+using Microsoft.AspNetCore.Authorization;
 
 namespace DentalShop.Areas.Admin.Controllers
 {

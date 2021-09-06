@@ -46,13 +46,17 @@ namespace DentalShop.Controllers
             if (!await userManager.CheckPasswordAsync(user, credentials.Password))
                 return Unauthorized();
 
-            var accessToken = tokenGenerator.GenerateAccessToken(user);
+            var test = context.UserRoles.Where(x => x.UserId == user.Id).FirstOrDefault().RoleId;
+            var role = await roleManager.FindByIdAsync(test);
+            var accessToken = tokenGenerator.GenerateAccessToken(user, role);
+
 
             var response = new AuthResponseDTO
             {
                 AccessToken = accessToken,
                 UserId = user.Id,
                 Username = user.UserName
+
             };
             return response;
         }
@@ -64,7 +68,7 @@ namespace DentalShop.Controllers
             {
                 Email = credentials.Email,
                 Name = credentials.Name,
-                UserName = credentials.Email,
+                UserName = credentials.Name,
                 PhoneNumber = credentials.Phone
             };
 

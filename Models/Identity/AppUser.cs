@@ -10,6 +10,5 @@ namespace DentalShop.Models.Identity
     public class AppUser : IdentityUser
     {
         public string Name { get; set; }
-
     }
 }

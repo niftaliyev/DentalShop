@@ -26,16 +26,20 @@ namespace DentalShop.Services
             return Guid.NewGuid().ToString();
         }
 
-        public string GenerateAccessToken(IdentityUser user)
+        public string GenerateAccessToken(IdentityUser user, IdentityRole role)
         {
             var tokenHandler = new JwtSecurityTokenHandler();
             var key = Encoding.ASCII.GetBytes(Options.Secret);
+            
             var tokenDescriptor = new SecurityTokenDescriptor
             {
                 Subject = new ClaimsIdentity(new Claim[]
                 {
                     new Claim(ClaimTypes.NameIdentifier, user.Id),
-                    new Claim(ClaimTypes.Name, user.UserName)
+                    new Claim(ClaimTypes.Name, user.UserName),
+                    new Claim(ClaimTypes.Role, role.Name)
+
+
                 }),
                 Expires = DateTime.UtcNow.Add(Options.AccessExpiration),
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)

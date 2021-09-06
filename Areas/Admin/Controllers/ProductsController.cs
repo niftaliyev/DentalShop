@@ -13,11 +13,11 @@ using DentalShop.Helper;
 using System.IO;
 using Microsoft.AspNetCore.Hosting;
 using DentalShop.Areas.ViewModels;
+using System.Security.Claims;
 
 namespace DentalShop.Areas.Admin.Controllers
 {
     [Area("Admin")]
-    [Authorize]
     public class ProductsController : Controller
     {
         private readonly DentalShopDbContext _context;
@@ -30,9 +30,9 @@ namespace DentalShop.Areas.Admin.Controllers
         }
 
         // GET: Admin/Products
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(int? id)
         {
-            var dentalShopDbContext = _context.Products.Include(p => p.Category).OrderByDescending(x => x.Id);
+            var dentalShopDbContext = _context.Products.Include(p => p.Category).OrderByDescending(x => x.Id).Where(x => x.CategoryId == id);
             return View(await dentalShopDbContext.ToListAsync());
         }
 
@@ -66,7 +66,7 @@ namespace DentalShop.Areas.Admin.Controllers
         // GET: Admin/Products/Create
         public IActionResult Create()
         {
-            ViewData["CategoryId"] = new SelectList(_context.Categories, "Id", "Title");
+            ViewData["CategoryId"] = new SelectList(_context.Categories.Where(x => x.ParentCategory == null), "Id", "Title");
             return View();
         }
 

@@ -12,7 +12,7 @@ using Microsoft.AspNetCore.Authorization;
 namespace DentalShop.Areas.Admin.Controllers
 {
     [Area("Admin")]
-    [Authorize]
+    [Authorize(Roles = "Admin")]
     public class CategoriesController : Controller
     {
         private readonly DentalShopDbContext _context;
@@ -23,6 +23,7 @@ namespace DentalShop.Areas.Admin.Controllers
         }
 
         // GET: Admin/Categories
+        [HttpGet]
         public async Task<IActionResult> Index()
         {
             return View(await _context.Categories.ToListAsync());
