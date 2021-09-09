@@ -1,4 +1,5 @@
-﻿using DentalShop.Models.Identity;
+﻿using DentalShop.Areas.Admin.Model;
+using DentalShop.Models.Identity;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,7 +12,7 @@ namespace DentalShop.Areas.ViewModels
         public string Id { get; set; }
         public string Name { get; set; }
         public string Email { get; set; }
-
+        public Delivery Delivery { get; set; }
         public AppUser AppUserModel { get; set; }
     }
 }

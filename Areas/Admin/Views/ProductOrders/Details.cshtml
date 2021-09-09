@@ -1,7 +1,10 @@
-﻿@model IEnumerable<DentalShop.Models.ProductOrder>
+﻿@model DentalShop.Areas.ViewModels.DetailOrdersViewModel
+
 
 @{ ViewData["Title"] = "Details"; }
 
+<h1 style="text-align:center; color:blue;">@Model.Name</h1>
+<a style="text-align:center;" class="btn btn-danger" asp-area="Admin" asp-controller="ProductOrders" asp-action="Delete" asp-route-id="@Model.Id">DONE</a> 
 <table class="table">
     <thead>
         <tr>
@@ -14,12 +17,15 @@
             <th>
                 <span>Count</span>
             </th>
+            <th>
+                <span>Delivery</span>
+            </th>
             <th></th>
         </tr>
     </thead>
     <tbody>
 
-        @foreach (var item in Model)
+        @foreach (var item in Model.ProductOrders)
         {
 
 <tr>
@@ -32,6 +38,9 @@
     </td>
     <td>
         <p>@item.Count</p>
+    </td>
+    <td>
+        <p>@item.Delivery</p>
     </td>
 
 </tr>}

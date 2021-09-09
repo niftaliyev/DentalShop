@@ -6,11 +6,6 @@ using System.Threading.Tasks;
 
 namespace DentalShop.Areas.Admin.Model
 {
-    public enum Currency
-    {
-        DOLAR,
-        MANAT
-    }
     public class Product
     {
         public int Id { get; set; }

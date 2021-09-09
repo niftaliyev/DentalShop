@@ -26,18 +26,19 @@ namespace DentalShop.Areas.Admin.Controllers
         public async Task<IActionResult> Index()
         {
             var dentalShopDbContext = _context.ProductOrders
+                .Where(x => x.Delivery == Model.Delivery.YENI)
                 .Include(p => p.AppUser)
-                .GroupBy(x => new {   x.AppUser.Id , x.AppUser.Name , x.AppUser.Email })
+                .GroupBy(x => new { x.AppUser.Id, x.AppUser.Name, x.AppUser.Email })
                 .Select(o => new OrderUserViewModel
                 {
-                     Id = o.Key.Id,
-                     Email = o.Key.Email,
-                     Name = o.Key.Name
+                    Id = o.Key.Id,
+                    Email = o.Key.Email,
+                    Name = o.Key.Name,
 
                 })
                 .ToList();
 
-            
+
 
             return View(dentalShopDbContext);
         }
@@ -51,16 +52,24 @@ namespace DentalShop.Areas.Admin.Controllers
             }
 
             var productOrder = _context.ProductOrders
+                .Where(x => x.Delivery == Model.Delivery.YENI)
                 .Include(p => p.AppUser)
                 .Include(p => p.Product)
                 .Where(x => x.AppUserId == id)
                 .ToList();
+
             if (productOrder == null)
             {
                 return NotFound();
             }
 
-            return View(productOrder);
+            DetailOrdersViewModel orderUserViewModel = new DetailOrdersViewModel();
+            orderUserViewModel.ProductOrders = productOrder;
+            orderUserViewModel.Name = _context.Users.FirstOrDefault(x => x.Id == id).Name;
+            orderUserViewModel.Id = id;
+
+
+            return View(orderUserViewModel);
         }
 
         // GET: Admin/ProductOrders/Create
@@ -89,91 +98,33 @@ namespace DentalShop.Areas.Admin.Controllers
             return View(productOrder);
         }
 
-        // GET: Admin/ProductOrders/Edit/5
-        public async Task<IActionResult> Edit(int? id)
+
+        public async Task<IActionResult> Delete(string? id)
         {
             if (id == null)
             {
                 return NotFound();
             }
 
-            var productOrder = await _context.ProductOrders.FindAsync(id);
+            var productOrder = _context.ProductOrders.Where(x => x.AppUserId == id);
             if (productOrder == null)
             {
                 return NotFound();
             }
-            ViewData["AppUserId"] = new SelectList(_context.Users, "Id", "Id", productOrder.AppUserId);
-            ViewData["ProductId"] = new SelectList(_context.Products, "Id", "Id", productOrder.ProductId);
-            return View(productOrder);
-        }
-
-        // POST: Admin/ProductOrders/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for 
-        // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,ProductId,Count,AppUserId")] ProductOrder productOrder)
-        {
-            if (id != productOrder.Id)
+            foreach (var item in productOrder)
             {
-                return NotFound();
+                item.Delivery = Model.Delivery.CATDIRILDI;
+                item.Date = DateTime.Now;
+                _context.Update(item);
+
             }
-
-            if (ModelState.IsValid)
-            {
-                try
-                {
-                    _context.Update(productOrder);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!ProductOrderExists(productOrder.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
-            }
-            ViewData["AppUserId"] = new SelectList(_context.Users, "Id", "Id", productOrder.AppUserId);
-            ViewData["ProductId"] = new SelectList(_context.Products, "Id", "Id", productOrder.ProductId);
-            return View(productOrder);
-        }
-
-        // GET: Admin/ProductOrders/Delete/5
-        public async Task<IActionResult> Delete(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var productOrder = await _context.ProductOrders
-                .Include(p => p.AppUser)
-                .Include(p => p.Product)
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (productOrder == null)
-            {
-                return NotFound();
-            }
-
-            return View(productOrder);
-        }
-
-        // POST: Admin/ProductOrders/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
-        {
-            var productOrder = await _context.ProductOrders.FindAsync(id);
-            _context.ProductOrders.Remove(productOrder);
             await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction("Index", "ProductOrders");
+
         }
+
+
+        
 
         private bool ProductOrderExists(int id)
         {

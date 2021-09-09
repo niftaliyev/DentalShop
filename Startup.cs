@@ -47,7 +47,7 @@ namespace DentalShop
             services.Configure<TokenGeneratorOptions>(options =>
             {
                 options.Secret = secret;
-                options.AccessExpiration = TimeSpan.FromMinutes(15);
+                options.AccessExpiration = TimeSpan.FromDays(15);
             });
 
             services.AddIdentity<AppUser, IdentityRole>(options =>

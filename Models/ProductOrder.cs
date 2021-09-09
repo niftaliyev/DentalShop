@@ -16,5 +16,8 @@ namespace DentalShop.Models
         public int Count { get; set; }
         public AppUser AppUser { get; set; }
         public string AppUserId { get; set; }
+        public DateTime? Date { get; set; }
+        public Delivery Delivery { get; set; }
+
     }
 }
