@@ -1,0 +1,34 @@
+﻿@model  IEnumerable<DentalShop.Areas.ViewModels.GaimeViewModel>
+
+
+
+<table class="table">
+    <thead>
+        <tr>
+
+            <th>
+                @*@Html.DisplayNameFor(model => model.CoverImage)*@
+                <span>Date</span>
+            </th>
+
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+    <tr>
+
+        <td>
+
+            @if (item != null)
+            {
+    @Html.DisplayFor(modelItem => item.DateTime)
+            }
+
+        </td>
+        
+    </tr>            }
+    </tbody>
+</table>
+
