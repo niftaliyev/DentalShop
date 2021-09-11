@@ -38,7 +38,7 @@ namespace DentalShop.Controllers
             foreach (var itemOrder in order.Orders)
             {
                 var product = _context.Products.Where(x => x.Id == itemOrder.ProductId).FirstOrDefault();
-                var test = userOrders.Any(x => x.ProductId == itemOrder.ProductId && x.Product.Color == product.Color);
+                var test = userOrders.Any(x => x.ProductId == itemOrder.ProductId && x.Product.Color == product.Color && x.Delivery != Delivery.CATDIRILDI);
                
 
 
