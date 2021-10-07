@@ -18,6 +18,7 @@ using System.Security.Claims;
 namespace DentalShop.Areas.Admin.Controllers
 {
     [Area("Admin")]
+    [Authorize(Roles = "Admin")]
     public class ProductsController : Controller
     {
         private readonly DentalShopDbContext _context;
@@ -75,7 +76,7 @@ namespace DentalShop.Areas.Admin.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Title,CoverImage,Price,Description,CategoryId,IsActive,Color,Link,Currency")] Product product, IFormFileCollection Image)
+        public async Task<IActionResult> Create([Bind("Id,Title,CoverImage,Price,Description,CategoryId,IsActive,Color,Link,Currency")] Product product, IFormFileCollection Image,int categoryname)
         {
             //var path = await FileUploadHelper.UploadAsync(Image[2]);
 
@@ -97,6 +98,7 @@ namespace DentalShop.Areas.Admin.Controllers
                 _context.SaveChanges();
 
                 product.CoverImage = _context.Images.Where(x => x.ProductId == product.Id).FirstOrDefault().ProductImage;
+                product.CategoryId = categoryname;
                 _context.SaveChanges();
 
 

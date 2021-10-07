@@ -46,9 +46,7 @@ namespace DentalShop.Controllers
             if (!await userManager.CheckPasswordAsync(user, credentials.Password))
                 return Unauthorized();
 
-            var test = context.UserRoles.Where(x => x.UserId == user.Id).FirstOrDefault().RoleId;
-            var role = await roleManager.FindByIdAsync(test);
-            var accessToken = tokenGenerator.GenerateAccessToken(user, role);
+            var accessToken = tokenGenerator.GenerateAccessToken(user);
 
 
             var response = new AuthResponseDTO

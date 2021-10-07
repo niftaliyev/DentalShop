@@ -33,36 +33,41 @@ namespace DentalShop.Controllers
 
             var userOrders = _context.ProductOrders.Where(x => x.AppUserId == user.Id);
 
-            
+
 
             foreach (var itemOrder in order.Orders)
             {
                 var product = _context.Products.Where(x => x.Id == itemOrder.ProductId).FirstOrDefault();
                 var test = userOrders.Any(x => x.ProductId == itemOrder.ProductId && x.Product.Color == product.Color && x.Delivery != Delivery.CATDIRILDI);
-               
+
+                var count = order.Orders.Where(x => x.ProductId == itemOrder.ProductId).Count();
+
+                if (test)
+                {
+                    var itemUserOrder = _context.ProductOrders.Where(x => x.AppUserId == user.Id && x.ProductId == itemOrder.ProductId).FirstOrDefault();
+                    itemUserOrder.Count += itemOrder.Count;
+                    _context.ProductOrders.Update(itemUserOrder);
+                }
+
+                else if (count < 2)
+                {
+
+                    _context.ProductOrders.Add(new ProductOrder
+                    {
+                        ProductId = itemOrder.ProductId,
+                        Count = itemOrder.Count,
+                        AppUserId = user.Id
+                    });
+                }
 
 
-                    if (test)
-                    {
-                        var itemUserOrder = _context.ProductOrders.Where(x => x.AppUserId == user.Id && x.ProductId == itemOrder.ProductId).FirstOrDefault();
-                        itemUserOrder.Count += itemOrder.Count;
-                        _context.ProductOrders.Update(itemUserOrder);
-                    }
-                    else
-                    {
-                        _context.ProductOrders.Add(new ProductOrder
-                        {
-                            ProductId = itemOrder.ProductId,
-                            Count = itemOrder.Count,
-                            AppUserId = user.Id
-                        });
-                    }
-                
+
+
             }
             _context.SaveChanges();
 
 
-           
+
             return Ok();
 
         }

@@ -111,5 +111,13 @@ namespace DentalShop.Controllers
         {
             return _context.Categories.Any(e => e.Id == id);
         }
+
+
+        [HttpGet("child/{id}")]
+        public ActionResult<IEnumerable<Category>> GetParentCategory(int id)
+        {
+            var categories = _context.Categories.Where(x => x.ParentCategoryId == id).ToList();
+            return categories;
+        }
     }
 }

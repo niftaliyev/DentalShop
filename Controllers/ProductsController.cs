@@ -31,7 +31,8 @@ namespace DentalShop.Controllers
                       {
                           Id = x.Id,
                           Images = x.Images,
-                          Title = x.Title
+                          Title = x.Title,
+                          CategoryId = x.CategoryId
                       }).ToListAsync();
 
             return products;

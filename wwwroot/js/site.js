@@ -11,3 +11,7 @@ function donwload(input) {
         img.src = reader.result;
     }
 }
+
+function myFunction(chosen) {
+    console.log(chosen);
+}
