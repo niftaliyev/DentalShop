@@ -34,7 +34,7 @@ namespace DentalShop.Areas.Admin.Controllers
         public async Task<IActionResult> Index(int? id)
         {
             var dentalShopDbContext = _context.Products.Include(p => p.Category).OrderByDescending(x => x.Id).Where(x => x.CategoryId == id);
-            return View(await dentalShopDbContext.ToListAsync());
+            return View(await dentalShopDbContext.OrderBy(x => x.Id).ToListAsync());
         }
 
         // GET: Admin/Products/Details/5

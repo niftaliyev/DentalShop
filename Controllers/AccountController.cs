@@ -37,7 +37,7 @@ namespace DentalShop.Controllers
         }
 
         [HttpPost("login")]
-        public async Task<ActionResult<AuthResponseDTO>> Login(AccountLoginDTO credentials)
+        public async Task<ActionResult<AuthResponseDTO>> Login([FromQuery] AccountLoginDTO credentials)
         {
             var user = await userManager.FindByNameAsync(credentials.Email);
 
@@ -60,7 +60,7 @@ namespace DentalShop.Controllers
         }
 
         [HttpPost("register")]
-        public async Task<IActionResult> Register(AccountCredentialsDTO credentials)
+        public async Task<IActionResult> Register([FromQuery] AccountCredentialsDTO credentials)
         {
             var user = new AppUser
             {

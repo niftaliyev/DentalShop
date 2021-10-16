@@ -7,11 +7,13 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using DentalShop.Areas.Admin.Model;
 using DentalShop.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace DentalShop.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class ProductsController : ControllerBase
     {
         private readonly DentalShopDbContext _context;
@@ -31,6 +33,14 @@ namespace DentalShop.Controllers
                       {
                           Id = x.Id,
                           Images = x.Images,
+                          CoverImage = x.CoverImage,
+                          Price = x.Price,
+                          Description = x.Description,
+                          Category = x.Category,
+                          IsActive = x.IsActive,
+                          Color = x.Color,
+                          Link = x.Link,
+                          Currency = x.Currency,
                           Title = x.Title,
                           CategoryId = x.CategoryId
                       }).ToListAsync();
@@ -38,8 +48,9 @@ namespace DentalShop.Controllers
             return products;
 
         }
+        
 
-        // GET: api/Products/5
+        //GET: api/Products/5
         [HttpGet("{id}")]
         public async Task<ActionResult<Product>> GetProduct(int id)
         {

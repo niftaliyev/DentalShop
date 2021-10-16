@@ -44,7 +44,7 @@ namespace DentalShop.Controllers
 
                 if (test)
                 {
-                    var itemUserOrder = _context.ProductOrders.Where(x => x.AppUserId == user.Id && x.ProductId == itemOrder.ProductId).FirstOrDefault();
+                    var itemUserOrder = _context.ProductOrders.Where(x => x.AppUserId == user.Id && x.ProductId == itemOrder.ProductId && x.Delivery == Delivery.YENI).FirstOrDefault();
                     itemUserOrder.Count += itemOrder.Count;
                     _context.ProductOrders.Update(itemUserOrder);
                 }
